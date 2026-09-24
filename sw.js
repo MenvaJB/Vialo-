@@ -1,4 +1,4 @@
-const CACHE = 'vialo-v1';
+const CACHE = 'vialo-v4-10';
 const ASSETS = ['./', './index.html', './icon-180.png', './icon-192.png', './icon-512.png', './manifest.webmanifest'];
 
 self.addEventListener('install', (e) => {
@@ -14,12 +14,15 @@ self.addEventListener('activate', (e) => {
 });
 
 self.addEventListener('fetch', (e) => {
-  if (e.request.method !== 'GET') return;
+  const req = e.request;
+  if (req.method !== 'GET') return;
+  const url = new URL(req.url);
+  // Audio en andere externe bronnen (online stem, fonts) nooit onderscheppen
+  if (url.origin !== self.location.origin || req.destination === 'audio' || req.headers.has('range')) return;
   e.respondWith(
-    caches.match(e.request).then((hit) => hit || fetch(e.request).then((res) => {
-      const copy = res.clone();
-      caches.open(CACHE).then((c) => c.put(e.request, copy)).catch(() => {});
+    caches.match(req).then((hit) => hit || fetch(req).then((res) => {
+      if (res.ok) { const copy = res.clone(); caches.open(CACHE).then((c) => c.put(req, copy)).catch(() => {}); }
       return res;
-    }).catch(() => caches.match('./index.html')))
+    }).catch(() => req.mode === 'navigate' ? caches.match('./index.html') : Response.error()))
   );
 });
