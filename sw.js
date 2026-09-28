@@ -1,4 +1,4 @@
-const CACHE = 'vialo-v4-15';
+const CACHE = 'vialo-v4-18';
 const ASSETS = ['./', './index.html', './icon-180.png', './icon-192.png', './icon-512.png', './manifest.webmanifest'];
 
 self.addEventListener('install', (e) => {
