@@ -1,4 +1,4 @@
-const CACHE = 'vialo-v8-1';
+const CACHE = 'vialo-v8-2';
 const ASSETS = ['./', './index.html', './icon-180.png', './icon-192.png', './icon-512.png', './manifest.webmanifest'];
 
 self.addEventListener('install', (e) => {
